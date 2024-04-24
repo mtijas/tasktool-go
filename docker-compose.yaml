@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: 2024 Markus Ijäs
+#
+# SPDX-License-Identifier: CC0-1.0
+
+version: "3.5"
+
+services:
+  tasktool:
+    image: tasktool:dev
+    container_name: tasktool
+    build:
+      context: .
+      target: development
+    ports:
+      - 8080:8000
+    volumes:
+      - ./app:/app/:z
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - tasktool-dev-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8081:8080
+    env_file:
+      - .env
+
+volumes:
+  tasktool-dev-data:
